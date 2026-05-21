@@ -1,0 +1,45 @@
+---
+description: Strict React/Next edits — shallow JSX, tree mirroring hierarchy, no barrel files; fetch in hooks; context when prop-drilling exceeds two levels.
+alwaysApply: true
+---
+
+# Strict edits and React structure
+
+## Scope
+
+- Do **not** refactor existing code unless the user explicitly asks or it is **strictly required** to complete the task.
+- **Legacy files:** Match the file’s existing patterns (naming, imports, layout). Do not “modernize” unrelated code.
+- **Exception:** For **new** files and **required** logic changes, follow the rules below.
+
+## JSX and logic (max two visual levels)
+
+- In a single `.tsx` file, JSX nesting must not exceed **two levels**: **Wrapper → Child** (one child layer under the root wrapper).
+- **No in-file stacking:** Avoid `Component → Component` or `div → div` depth in one file. If you need deeper layout or composition, extract into a **subfolder** with its own component(s).
+- **Extract when:** Logic exceeds ~**5 lines** in the component **or** layout needs more nesting → move UI into `sub-folder/` (or equivalent) so each file stays shallow.
+- **Hooks:** At most **one** `use[Name].ts` per folder. Hook is **only** for state, effects, or non-trivial logic—not for Tailwind class strings, static labels, or i18n keys (keep those in `.tsx`).
+
+## File tree (mirror JSX)
+
+- Folder structure should **mirror** the visual/component hierarchy (nested route or feature folders match nested UI).
+- **Leaf folder:** Prefer at most **one** `.tsx` plus **one** `.ts` (the hook) per leaf folder.
+- **Data:** Use **native `fetch`** inside hooks only (not scattered across random modules) for consistency with this rule set.
+- **State:** Use **React Context** when sharing state would otherwise require prop-drilling **more than two** levels.
+
+## Directory roles
+
+| Path        | Role                                      |
+| ----- | ----- |
+| `sub-folder/` | Nested child UI (matches hierarchy)   |
+| `shared/`   | Reusable global UI atoms                   |
+| `utils/`    | Pure TypeScript (no React / JSX)          |
+| `types/`    | Type definitions only                     |
+
+## Anti-patterns
+
+- **No** `index.ts` barrel re-exports.
+- **No** drilling event handlers or callbacks through many layers: children should use **their own hook** or **context** instead of long handler prop chains.
+
+```tsx
+// BAD: div > div > … > Component; long inline logic; hook that only returns className strings.
+// GOOD: Wrapper > Child; deeper UI in child folder; logic in useSection.ts; labels/classes in TSX.
+```

@@ -1,0 +1,22 @@
+---
+description: Prefer shadcn/ui under components/ui, Tailwind-only styling, Radix patterns for new primitives. Use when creating or styling UI components.
+globs: "**/components/**/*.tsx"
+alwaysApply: false
+---
+
+# Shadcn/ui & Clean Styling Rules
+
+## Core Principles
+- **Prefer shadcn/ui**: Always check if a component exists in `@/components/ui` before creating a new one or using a third-party library.
+- **No External Styles**: Do not add external CSS files, `<style>` blocks, or inline `style={{...}}` attributes to shadcn components.
+- **Tailwind Only**: Use exclusively Tailwind CSS utility classes for any layout or style adjustments.
+
+## Implementation Details
+- **Atomic Changes**: When modifying shadcn components, apply Tailwind classes directly to the existing `className` props via `cn()`.
+- **Consistency**: Maintain the existing design tokens (colors, radii, fonts) defined in `globals.css` and `tailwind.config.js`.
+- **New Components**: If a required component is not in `ui`, build it using Radix UI primitives and Tailwind, following the shadcn pattern.
+
+## Guidelines
+- If I ask for a UI element, first suggest the shadcn version.
+- Never "fix" styling by adding custom CSS classes in a global stylesheet.
+- Keep the components accessible and functional as per Radix UI standards.
